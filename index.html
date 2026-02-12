@@ -1,1 +1,25 @@
+<a class="btn" id="tgLink" href="#" target="_blank" rel="noopener">Оставить заявку в Telegram</a>
+
+<script>
+  // TODO: замени на свой @username без @
+  const TG_USERNAME = "@theiknow";
+
+  function buildMsg() {
+    const days = document.querySelector('[name="days"]')?.value || "";
+    const size = document.querySelector('[name="size"]')?.value || "";
+    const phone = document.querySelector('[name="phone"]')?.value || "";
+    const msg = `Здравствуйте! Хочу оставить вещи на хранение.
+Город: Одинцово
+Срок: ${days} дней
+Размер: ${size}
+Телефон: ${phone}`;
+    return encodeURIComponent(msg);
+  }
+
+  document.getElementById("tgLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    const url = `https://t.me/${TG_USERNAME}?text=${buildMsg()}`;
+    window.open(url, "_blank");
+  });
+</script>
 
