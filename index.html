@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Хранение вещей — Одинцово</title>
-  <meta name="description" content="Оставьте вещи на несколько дней в Одинцово. Быстро, удобно, рядом." />
+  <title>Оставить вещи — Одинцово</title>
+  <meta name="description" content="Оставьте вещи на хранение в Одинцово. Быстрое оформление, удобная точка." />
+
+  <!-- Favicon: положи favicon.png в корень репозитория рядом с index.html -->
+  <link rel="icon" type="image/png" href="./favicon.png" />
 
   <style>
     :root{
@@ -26,7 +29,7 @@
     }
 
     .wrap{
-      max-width: 960px;
+      max-width: 980px;
       margin: 0 auto;
       padding: 28px 14px 60px;
     }
@@ -79,21 +82,34 @@
       letter-spacing: .01em;
     }
 
-    .grid2{
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 10px;
+    /* prices: simplified */
+    .price-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
     }
-
-    .price{
+    .pill{
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 14px;
       background: rgba(0,0,0,.02);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: rgba(0,0,0,.8);
+      white-space: nowrap;
     }
-    .price b{ font-size: 14px; }
-    .price div{ margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .price-main{
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      margin-right: 8px;
+    }
+    .small-note{
+      font-size: 12px;
+      color: rgba(0,0,0,.58);
+      margin-top: 8px;
+      line-height: 1.35;
+    }
 
     .steps{
       margin: 0;
@@ -152,7 +168,7 @@
       border: 0;
       cursor: pointer;
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       background: #111;
       color: #fff;
@@ -163,7 +179,7 @@
     .btn:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.16); }
     .btn:active{ transform: translateY(0px); opacity: .92; }
 
-    .small{
+    .micro{
       font-size: 12px;
       color: rgba(0,0,0,.55);
       margin-top: 10px;
@@ -178,6 +194,7 @@
       border: 1px solid var(--line);
       background: #000;
       min-height: 220px;
+      cursor: pointer;
     }
     .map-img{
       width: 100%;
@@ -186,6 +203,7 @@
       display: block;
       opacity: .92;
       transform: scale(1.02);
+      pointer-events: none; /* чтобы клики уходили в ссылку */
     }
     .map-overlay{
       position: absolute;
@@ -194,6 +212,7 @@
       align-items: flex-end;
       padding: 14px;
       background: linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.55));
+      pointer-events: none; /* важно: не перехватывать клики */
     }
     .map-badge{
       background: rgba(255,255,255,.92);
@@ -202,24 +221,18 @@
       padding: 10px 12px;
       max-width: 95%;
       box-shadow: 0 12px 28px rgba(0,0,0,.20);
+      pointer-events: none; /* важно */
     }
     .map-badge b{ display:block; font-size: 14px; }
     .map-badge span{ display:block; font-size: 12px; color: rgba(0,0,0,.65); margin-top: 3px; }
 
+    /* ссылка поверх ВСЕЙ карточки */
     .map-link{
       position:absolute;
       inset:0;
+      z-index: 5;
       text-decoration:none;
-      color: transparent; /* чтобы ссылку не было видно */
-    }
-    .map-cta{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      margin-top: 8px;
-      font-weight: 700;
-      font-size: 12px;
-      color: rgba(0,0,0,.80);
+      color: transparent;
     }
 
     @media (max-width: 860px){
@@ -236,44 +249,45 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <!-- LEFT: info -->
+      <!-- LEFT -->
       <div class="card">
-        <h1 class="h1">Нужно оставить вещи на несколько дней?</h1>
+        <h1 class="h1">Нужно оставить вещи?</h1>
         <p class="lead">
-          Переезд, ремонт, отпуск — можно просто оставить багаж у нас и забрать потом.
+          Переезд, ремонт, отпуск — можно оставить багаж у нас и забрать позже.
         </p>
 
         <div class="chips">
           <div class="chip">Одинцово</div>
           <div class="chip">Можайское шоссе 22А</div>
           <div class="chip">ПВЗ ODN71</div>
+          <div class="chip">до 100 кг</div>
         </div>
 
-        <div class="section-title">Сколько стоит</div>
-        <div class="grid2">
-          <div class="price">
-            <b>S — 150 ₽ / день</b>
-            <div>пакет / маленькая коробка</div>
-          </div>
-          <div class="price">
-            <b>M — 250 ₽ / день</b>
-            <div>средняя коробка / чемодан</div>
-          </div>
-          <div class="price">
-            <b>L — 400 ₽ / день</b>
-            <div>крупный багаж</div>
-          </div>
-          <div class="price">
-            <b>Минимум 3 дня</b>
-            <div>если нужно дольше — договоримся</div>
-          </div>
+        <div class="section-title">Стоимость</div>
+        <div class="price-row">
+          <span class="price-main">от 200 ₽</span>
+          <span class="pill">S 200</span>
+          <span class="pill">M 300</span>
+          <span class="pill">L 450</span>
+        </div>
+        <div class="small-note">
+          Цена — за оформление (по выбранному размеру). Хранение — по условиям тарифа.
+        </div>
+
+        <div class="section-title">Размер</div>
+        <div class="price-row" style="margin-top:6px;">
+          <span class="pill">S</span>
+          <span class="pill">M</span>
+          <span class="pill">L</span>
+          <span class="pill">XL</span>
+          <span class="pill">Негабарит (до 100 кг)</span>
         </div>
 
         <div class="section-title">Как это работает</div>
         <ol class="steps">
-          <li>Заполняете телефон, срок и размер.</li>
-          <li>Нажимаете кнопку — откроется Telegram с готовым сообщением.</li>
-          <li>Мы подтверждаем и подсказываем, как всё оформить на месте.</li>
+          <li>Заполняете телефон и выбираете размер.</li>
+          <li>Нажимаете кнопку — откроется Telegram с сообщением.</li>
+          <li>Мы отвечаем и подсказываем, как всё оформить на месте.</li>
         </ol>
 
         <div class="section-title">Куда приносить</div>
@@ -283,19 +297,21 @@
         </p>
       </div>
 
-      <!-- RIGHT: form + map -->
+      <!-- RIGHT -->
       <div class="card">
         <h2 class="form-title">Оставить вещи</h2>
-        <p class="form-sub">Телефон и срок — дальше быстро подтвердим.</p>
+        <p class="form-sub">Выберите размер и нажмите кнопку — мы быстро ответим.</p>
 
         <div class="form-grid">
           <input class="input full" name="phone" placeholder="Телефон для связи" inputmode="tel" />
-          <input class="input" name="days" placeholder="На сколько дней?" inputmode="numeric" />
+          <input class="input" name="days" placeholder="На сколько дней? (необязательно)" inputmode="numeric" />
           <select class="select" name="size">
             <option value="">Размер</option>
-            <option value="S">S — пакет/маленькая коробка</option>
-            <option value="M">M — средняя коробка/чемодан</option>
-            <option value="L">L — крупный багаж</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="Негабарит до 100 кг">Негабарит до 100 кг</option>
           </select>
         </div>
 
@@ -305,44 +321,38 @@
           </a>
         </div>
 
-        <p class="small">Мы отвечаем быстро. Если удобнее — можно просто написать “хочу хранение” и телефон.</p>
+        <p class="micro">Можно просто написать “хочу оставить вещи” — мы всё уточним.</p>
 
         <div class="section-title">Мы на карте</div>
-
-        <!-- Teaser карта: кликабельно, ссылка не показывается -->
         <div class="map-card">
           <a class="map-link" id="mapLink" href="#" target="_blank" rel="noopener">Открыть карту</a>
-          <!-- Превью-картинка (делаем через static-maps) -->
-          <img
-            class="map-img"
-            id="mapImg"
-            alt="Карта — Одинцово, Можайское шоссе 22А (ODN71)"
-            src=""
-          />
+          <img class="map-img" id="mapImg" alt="Карта — Одинцово, Можайское шоссе 22А (ODN71)" src="" />
           <div class="map-overlay">
             <div class="map-badge">
               <b>Одинцово, Можайское шоссе 22А</b>
               <span>ПВЗ ODN71 • нажмите, чтобы открыть карту</span>
-              <div class="map-cta">Открыть Яндекс.Карты ↗</div>
             </div>
           </div>
         </div>
+
+        <p class="micro" style="margin-top:10px;">
+          Принимаем до <b>100 кг</b>. Если сомневаетесь по размеру — напишите, подскажем.
+        </p>
       </div>
     </div>
   </div>
 
   <script>
-    // ВАЖНО: username БЕЗ @
+    // Telegram username БЕЗ @
     const TG_USERNAME = "theiknow";
 
-    // Яндекс.Карты (ссылка может быть любой, пользователь её как текст не увидит)
+    // Яндекс.Карты (ссылка не отображается пользователю, только открывается по клику)
     const YA_MAP_URL = "https://yandex.ru/maps/org/cdek/206506190857/?ll=37.280192%2C55.675397&z=16";
 
-    // Координаты точки (из твоей ссылки)
+    // Координаты точки
     const LON = 37.280192;
     const LAT = 55.675397;
 
-    // --- helpers ---
     function v(name){
       const el = document.querySelector(`[name="${name}"]`);
       return (el && el.value ? el.value.trim() : "");
@@ -354,30 +364,26 @@
       const phone = v("phone");
 
       const lines = [
-        "Здравствуйте! Хочу оставить вещи на хранение.",
-        "Город: Одинцово",
-        "Адрес: Можайское шоссе 22А (ПВЗ ODN71)",
-        days ? `Срок: ${days} дней` : "Срок: (не указал)",
+        "Здравствуйте! Хочу оставить вещи.",
+        "Адрес: Одинцово, Можайское шоссе 22А (ПВЗ ODN71)",
         size ? `Размер: ${size}` : "Размер: (не указал)",
+        days ? `Сколько дней: ${days}` : "Сколько дней: (не важно)",
         phone ? `Телефон: ${phone}` : "Телефон: (не указал)"
       ];
 
       return encodeURIComponent(lines.join("\n"));
     }
 
-    // Telegram переход
     document.getElementById("tgLink").addEventListener("click", (e) => {
       e.preventDefault();
       const url = `https://t.me/${TG_USERNAME}?text=${buildMsg()}`;
       window.location.href = url;
     });
 
-    // Карта: делаем тизер
+    // карта
     const mapLink = document.getElementById("mapLink");
     mapLink.href = YA_MAP_URL;
 
-    // Превью-карта через static-maps (без API ключа обычно работает, если Яндекс не режет)
-    // Если вдруг у кого-то не грузится, всё равно остаётся кликабельная карточка.
     const mapImg = document.getElementById("mapImg");
     const staticUrl =
       "https://static-maps.yandex.ru/1.x/?" +
