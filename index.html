@@ -1,25 +1,131 @@
-<a class="btn" id="tgLink" href="#" target="_blank" rel="noopener">Оставить заявку в Telegram</a>
+<style>
+  .storage-card{
+    max-width: 560px;
+    margin: 40px auto;
+    padding: 22px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: #fff;
+  }
+  .storage-title{ font-size: 22px; margin: 0 0 6px; }
+  .storage-sub{ margin: 0 0 16px; opacity: .75; line-height: 1.4; }
+
+  .storage-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 14px 0 16px;
+  }
+  .storage-grid .full{ grid-column: 1 / -1; }
+
+  .storage-input, .storage-select{
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,.14);
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+  }
+  .storage-input:focus, .storage-select:focus{
+    border-color: rgba(0,0,0,.35);
+    box-shadow: 0 0 0 4px rgba(0,0,0,.06);
+  }
+
+  .storage-actions{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-tg{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 650;
+    font-size: 14px;
+    background: #111;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    transition: transform .08s ease, box-shadow .08s ease, opacity .08s ease;
+  }
+  .btn-tg:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.16); }
+  .btn-tg:active{ transform: translateY(0px); opacity: .9; }
+
+  .hint{
+    font-size: 12px;
+    opacity: .65;
+    margin: 10px 0 0;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 560px){
+    .storage-card{ margin: 20px 12px; padding: 18px; }
+    .storage-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="storage-card" id="lead">
+  <h2 class="storage-title">Оставить заявку на хранение</h2>
+  <p class="storage-sub">Заполните пару полей — откроется Telegram с готовым текстом. Мы быстро подтвердим.</p>
+
+  <div class="storage-grid">
+    <input class="storage-input full" name="phone" placeholder="Телефон для связи" inputmode="tel" />
+    <input class="storage-input" name="days" placeholder="Сколько дней?" inputmode="numeric" />
+    <select class="storage-select" name="size">
+      <option value="">Размер</option>
+      <option value="S">S — пакет/маленькая коробка</option>
+      <option value="M">M — средняя коробка/чемодан</option>
+      <option value="L">L — крупный багаж</option>
+    </select>
+  </div>
+
+  <div class="storage-actions">
+    <a class="btn-tg" id="tgLink" href="#" rel="noopener">
+      <span>Оставить заявку в Telegram</span>
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+
+  <p class="hint">Если Telegram не открылся: проверьте, что установлен Telegram, или откройте ссылку в другом браузере.</p>
+</div>
 
 <script>
-  // TODO: замени на свой @username без @
-  const TG_USERNAME = "@theiknow";
+  // ВАЖНО: username БЕЗ @
+  const TG_USERNAME = "theiknow";
 
-  function buildMsg() {
-    const days = document.querySelector('[name="days"]')?.value || "";
-    const size = document.querySelector('[name="size"]')?.value || "";
-    const phone = document.querySelector('[name="phone"]')?.value || "";
-    const msg = `Здравствуйте! Хочу оставить вещи на хранение.
-Город: Одинцово
-Срок: ${days} дней
-Размер: ${size}
-Телефон: ${phone}`;
-    return encodeURIComponent(msg);
+  function v(name){
+    const el = document.querySelector(`[name="${name}"]`);
+    return (el && el.value ? el.value.trim() : "");
+  }
+
+  function buildMsg(){
+    const days = v("days");
+    const size = v("size");
+    const phone = v("phone");
+
+    const lines = [
+      "Здравствуйте! Хочу оставить вещи на хранение.",
+      "Город: Одинцово",
+      days ? `Срок: ${days} дней` : "Срок: (не указал)",
+      size ? `Размер: ${size}` : "Размер: (не указал)",
+      phone ? `Телефон: ${phone}` : "Телефон: (не указал)"
+    ];
+
+    return encodeURIComponent(lines.join("\n"));
   }
 
   document.getElementById("tgLink").addEventListener("click", (e) => {
     e.preventDefault();
     const url = `https://t.me/${TG_USERNAME}?text=${buildMsg()}`;
-    window.open(url, "_blank");
+    window.location.href = url; // надёжнее, чем window.open на мобилках/браузерах
   });
 </script>
-
