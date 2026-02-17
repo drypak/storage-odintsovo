@@ -11,12 +11,11 @@
     }
     *{ box-sizing:border-box; }
     body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text); background:var(--bg); }
-    .wrap{ max-width: 900px; margin: 34px auto; padding: 0 16px; }
+    .wrap{ max-width: 920px; margin: 34px auto; padding: 0 16px; }
     .card{
       background:var(--card); border:1px solid var(--border); border-radius: 18px;
       padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.06);
     }
-
     h1{ margin:0 0 8px; font-size: 32px; letter-spacing:-.02em; }
     p{ margin:0 0 10px; color:var(--muted); line-height:1.4; }
 
@@ -29,7 +28,10 @@
     input:focus, select:focus{ border-color:#c7cbd1; box-shadow: 0 0 0 4px rgba(17,17,17,.06); }
 
     .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    @media (max-width: 650px){ .row{ grid-template-columns:1fr; } }
+    @media (max-width: 700px){ .row{ grid-template-columns:1fr; } }
+
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin: 10px 0 2px; }
+    .chip{ border:1px solid var(--border); padding: 7px 10px; border-radius: 999px; font-size: 12px; background:#fff; }
 
     .hint{ font-size:12px; color:var(--muted); margin-top: 6px; }
     .hint b{ color:#111; }
@@ -44,18 +46,6 @@
     }
     .btn:disabled{ opacity:.5; cursor:not-allowed; }
 
-    .btnGhost{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:100%; padding: 12px 14px;
-      border-radius: 12px; border: 1px solid var(--border);
-      background:#fff; color:#111;
-      font-weight: 800; font-size: 14px; cursor:pointer;
-      margin-top: 10px;
-    }
-
-    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin: 10px 0 2px; }
-    .chip{ border:1px solid var(--border); padding: 7px 10px; border-radius: 999px; font-size: 12px; background:#fff; }
-
     .result{
       margin-top: 14px;
       border:1px solid var(--border);
@@ -66,18 +56,38 @@
       font-size: 13px;
       color:#111;
     }
-    .ok{ color:#0f7a32; font-weight:800; }
-    .err{ color:#b42318; font-weight:800; }
+    .ok{ color:#0f7a32; font-weight:900; }
+    .err{ color:#b42318; font-weight:900; }
 
-    /* Скрываем "технику" — оставим для дебага, если понадобится */
-    .debug{ display:none; white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; margin-top: 10px; }
+    .trackBox{
+      margin-top: 12px;
+      border:1px dashed #cfd5dd;
+      border-radius: 14px;
+      padding: 14px;
+      background:#fff;
+    }
+    .trackNum{
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      margin: 6px 0 10px;
+    }
+    .copyBtn{
+      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid var(--border);
+      background:#fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 800;
+    }
 
-    /* На печать (если вдруг): без лишних полей */
+    /* печать: можно печатать трек */
     @media print{
       body{ background:#fff; }
-      .wrap{ margin:0; max-width: none; padding:0; }
-      .card{ box-shadow:none; border: none; border-radius:0; }
-      .btn,.btnGhost,.result,.hint{ display:none !important; }
+      .wrap{ margin:0; max-width:none; padding:0; }
+      .card{ box-shadow:none; border:none; border-radius:0; }
+      .btn{ display:none !important; }
     }
   </style>
 </head>
@@ -85,7 +95,7 @@
   <div class="wrap">
     <div class="card">
       <h1>Оставить вещи в ПВЗ</h1>
-      <p>Выберите город и пункт выдачи — дальше мы быстро всё подтвердим в Telegram.</p>
+      <p>Выберите город и ПВЗ. Мы создадим заказ и покажем трек-номер.</p>
 
       <div class="chips">
         <span class="chip">до 100 кг</span>
@@ -106,8 +116,8 @@
       <div class="row">
         <div>
           <label>Телефон для связи</label>
-          <input id="phone" placeholder="+7 999 123-45-67"/>
-          <div class="hint">На него подтвердим и уточним детали.</div>
+          <input id="phone" placeholder="+7 999 123-45-67" inputmode="tel"/>
+          <div class="hint">Нужен для заказа/контакта.</div>
         </div>
         <div>
           <label>Размер</label>
@@ -123,27 +133,35 @@
         </div>
       </div>
 
-      <button class="btn" id="btnGo" disabled>Написать в Telegram</button>
-      <button class="btnGhost" id="btnCalc" disabled>Проверить стоимость (необязательно)</button>
+      <button class="btn" id="btnCreate" disabled>Создать заказ и получить трек-номер</button>
 
       <div class="result" id="resultLine">Заполните город и ПВЗ — кнопка станет активной.</div>
-      <div class="debug" id="debug"></div>
+
+      <div id="trackWrap" class="trackBox" style="display:none;">
+        <div class="ok">Заказ создан</div>
+        <div class="trackNum" id="trackNum">—</div>
+        <button class="copyBtn" id="copyBtn" type="button">Скопировать трек</button>
+        <div class="hint" style="margin-top:10px;">
+          Принесите вещи в выбранный ПВЗ и назовите этот трек-номер сотруднику.
+        </div>
+      </div>
     </div>
   </div>
 
 <script>
   // ====== НАСТРОЙКИ ======
+  // Бэк обязателен: токены CDEK нельзя держать в HTML.
   const API_BASE = "https://YOUR-WORKER.SUBDOMAIN.workers.dev"; // TODO: вставь URL Worker
-  const TG_USERNAME = "theiknow"; // TODO: ник без @
 
   // ====== STATE ======
-  let citySelected = null; // { code, city, region, country_code, fias_guid? ... }
-  let pvzSelected  = null; // { code, name, address, location? ... }
-  let lastTariff   = null; // { delivery_sum, tariff_code, ... }
+  let citySelected = null;
+  let pvzSelected  = null;
+  let isBusy = false;
 
   const $ = (id) => document.getElementById(id);
 
   function setResult(html){ $("resultLine").innerHTML = html; }
+
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
@@ -155,23 +173,21 @@
   }
 
   function refreshButtons() {
-    const okCity = !!citySelected;
-    const okPvz  = !!pvzSelected;
-    const phone  = $("phone").value.trim();
-    const okPhone = isPhoneOk(phone);
-    const okSize = !!$("size").value;
+    const okCity  = !!citySelected;
+    const okPvz   = !!pvzSelected;
+    const okPhone = isPhoneOk($("phone").value.trim());
+    const okSize  = !!$("size").value;
 
     $("pvz").disabled = !okCity;
+    const ready = okCity && okPvz && okPhone && okSize && !isBusy;
+    $("btnCreate").disabled = !ready;
 
-    const ready = okCity && okPvz && okPhone && okSize;
-    $("btnGo").disabled = !ready;
-    $("btnCalc").disabled = !(okCity && okPvz);
-
-    if (!okCity) setResult("Заполните город — появятся подсказки.");
+    if (isBusy) setResult("Создаём заказ…");
+    else if (!okCity) setResult("Заполните город — появятся подсказки.");
     else if (!okPvz) setResult("Теперь выберите ПВЗ из списка.");
-    else if (!okPhone) setResult("Введите телефон — чтобы мы могли подтвердить.");
-    else if (!okSize) setResult("Выберите размер — примерно, уточним потом.");
-    else setResult(`<span class="ok">Готово.</span> Нажмите “Написать в Telegram” — откроется сообщение с данными.`);
+    else if (!okPhone) setResult("Введите телефон — чтобы создать заказ.");
+    else if (!okSize) setResult("Выберите размер — чтобы создать заказ.");
+    else setResult(`<span class="ok">Готово.</span> Нажмите кнопку — покажем трек-номер.`);
   }
 
   async function api(path, opts={}) {
@@ -192,10 +208,10 @@
     const q = $("city").value.trim();
     citySelected = null;
     pvzSelected = null;
-    lastTariff = null;
     $("pvz").value = "";
     $("pvzList").innerHTML = "";
     $("pvzHint").textContent = "Сначала выберите город.";
+    $("trackWrap").style.display = "none";
 
     clearTimeout(cityTimer);
     if (q.length < 2) {
@@ -224,7 +240,7 @@
 
   async function loadCitySuggest(q) {
     try{
-      const data = await api(`/suggest/cities?q=${encodeURIComponent(q)}`, { method:"GET", headers:{} });
+      const data = await api(`/suggest/cities?q=${encodeURIComponent(q)}`, { method:"GET" });
       const list = data?.items || [];
       $("cityList").innerHTML = list.map(x => {
         const label = [x.city, x.region].filter(Boolean).join(", ");
@@ -236,7 +252,7 @@
     }
   }
 
-  // ====== PVZ LIST ======
+  // ====== PVZ ======
   $("pvz").addEventListener("change", () => {
     const val = $("pvz").value.trim();
     const opt = Array.from($("pvzList").children).find(o => o.value === val);
@@ -256,7 +272,7 @@
       $("pvz").disabled = true;
       $("pvzList").innerHTML = "";
 
-      const data = await api(`/deliverypoints?city_code=${encodeURIComponent(cityObj.code||"")}&city=${encodeURIComponent(cityObj.city||"")}`, { method:"GET", headers:{} });
+      const data = await api(`/deliverypoints?city_code=${encodeURIComponent(cityObj.code||"")}&city=${encodeURIComponent(cityObj.city||"")}`, { method:"GET" });
       const items = data?.items || [];
 
       $("pvzList").innerHTML = items.map(p => {
@@ -274,55 +290,6 @@
     }
   }
 
-  // ====== TELEGRAM ======
-  function buildTelegramMsg() {
-    const phone = $("phone").value.trim();
-    const size  = $("size").value;
-    const city  = citySelected?.city || $("city").value.trim();
-    const pvz   = pvzSelected?.code ? `${pvzSelected.code} — ${pvzSelected.address || pvzSelected.name || ""}` : $("pvz").value.trim();
-
-    // Никаких 5% в тексте. Никаких uuid.
-    const msg =
-`Здравствуйте! Хочу оставить вещи на хранение.
-Город: ${city}
-ПВЗ: ${pvz}
-Размер: ${size}
-Телефон: ${phone}`;
-    return encodeURIComponent(msg);
-  }
-
-  $("btnGo").addEventListener("click", () => {
-    const url = `https://t.me/${TG_USERNAME}?text=${buildTelegramMsg()}`;
-    window.open(url, "_blank", "noopener");
-  });
-
-  // ====== OPTIONAL: CALCULATOR (скрытый смысл, без вывода “внутрянки”) ======
-  $("btnCalc").addEventListener("click", async () => {
-    try{
-      setResult("Проверяем стоимость…");
-      const payload = {
-        city: citySelected,
-        pvz: pvzSelected,
-        package: packageBySize($("size").value || "S"),
-        from: { type: "pvz", code: pvzSelected.code },
-        to:   { type: "pvz", code: pvzSelected.code }
-      };
-      const data = await api("/calculator", { method:"POST", body: JSON.stringify(payload) });
-      lastTariff = data?.tariff || null;
-
-      // Клиенту показываем просто “от ХХХ ₽”, без деталей и без 5%.
-      const sum = Number(lastTariff?.delivery_sum || 0);
-      if (sum > 0) setResult(`<span class="ok">Ориентировочно:</span> от <b>${sum.toLocaleString("ru-RU")} ₽</b>. Точную сумму подтвердим в Telegram.`);
-      else setResult(`<span class="ok">Готово.</span> Точную сумму подтвердим в Telegram.`);
-    }catch(e){
-      setResult(`<span class="err">Не получилось посчитать</span>. Ничего страшного — нажмите “Написать в Telegram”, мы всё уточним.`);
-    }
-  });
-
-  // ====== PHONE/SIZE LIVE ======
-  $("phone").addEventListener("input", refreshButtons);
-  $("size").addEventListener("change", refreshButtons);
-
   function packageBySize(size){
     if (size === "S")  return { weight: 2.0, length: 35, width: 25, height: 20 };
     if (size === "M")  return { weight:10.0, length: 60, width: 40, height: 35 };
@@ -331,6 +298,61 @@
     if (size === "NEO")return { weight:50.0, length:120, width: 80, height: 80 };
     return { weight: 2.0, length: 35, width: 25, height: 20 };
   }
+
+  async function createOrder(){
+    try{
+      isBusy = true;
+      $("trackWrap").style.display = "none";
+      refreshButtons();
+
+      const payload = {
+        city: citySelected,
+        pvz: pvzSelected,
+        phone: $("phone").value.trim(),
+        size: $("size").value,
+        package: packageBySize($("size").value),
+        // Важно: отправка ПВЗ -> этот же ПВЗ (хранение как “фиктивная доставка”)
+        from: { type: "pvz", code: pvzSelected.code },
+        to:   { type: "pvz", code: pvzSelected.code }
+      };
+
+      const data = await api("/orders", { method:"POST", body: JSON.stringify(payload) });
+
+      const track = data?.track_number || data?.number || data?.orderNumber || "";
+      if (!track) throw new Error("Не получили трек-номер от бэка.");
+
+      $("trackNum").textContent = track;
+      $("trackWrap").style.display = "block";
+      setResult(`<span class="ok">Успех.</span> Трек-номер показан ниже.`);
+    }catch(e){
+      setResult(`<span class="err">Ошибка:</span> ${escapeHtml(String(e.message||e))}`);
+    }finally{
+      isBusy = false;
+      refreshButtons();
+    }
+  }
+
+  $("btnCreate").addEventListener("click", createOrder);
+
+  $("copyBtn").addEventListener("click", async () => {
+    const t = $("trackNum").textContent.trim();
+    try{
+      await navigator.clipboard.writeText(t);
+      $("copyBtn").textContent = "Скопировано";
+      setTimeout(() => $("copyBtn").textContent = "Скопировать трек", 1200);
+    }catch{
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = t; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy");
+      document.body.removeChild(ta);
+      $("copyBtn").textContent = "Скопировано";
+      setTimeout(() => $("copyBtn").textContent = "Скопировать трек", 1200);
+    }
+  });
+
+  $("phone").addEventListener("input", () => { $("trackWrap").style.display="none"; refreshButtons(); });
+  $("size").addEventListener("change", () => { $("trackWrap").style.display="none"; refreshButtons(); });
 
   refreshButtons();
 </script>
