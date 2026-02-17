@@ -1,396 +1,416 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Оставить вещи — Одинцово</title>
-  <meta name="description" content="Оставьте вещи на хранение в Одинцово. Быстрое оформление, удобная точка." />
-
-  <!-- Favicon: положи favicon.png в корень репозитория рядом с index.html -->
-  <link rel="icon" type="image/png" href="./favicon.png?v=3" />
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Хранение вещей через ПВЗ</title>
   <style>
-    :root{
-      --bg: #f6f7f9;
-      --card: #ffffff;
-      --text: #111;
-      --muted: rgba(0,0,0,.65);
-      --line: rgba(0,0,0,.10);
-      --shadow: 0 14px 40px rgba(0,0,0,.08);
-      --radius: 18px;
-    }
+    :root{ --bg:#f6f7f9; --card:#fff; --text:#111; --muted:#6b7280; --border:#e5e7eb; --btn:#111; --btnText:#fff; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text); background:var(--bg); }
+    .wrap{ max-width: 1050px; margin: 34px auto; padding: 0 16px; }
+    .grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
 
-    *{ box-sizing: border-box; }
-    body{
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
+    .card{ background:var(--card); border:1px solid var(--border); border-radius: 18px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    h1{ margin:0 0 8px; font-size: 34px; letter-spacing:-.02em; }
+    h2{ margin:0 0 8px; font-size: 20px; }
+    p{ margin:0 0 10px; color:var(--muted); line-height:1.4; }
 
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 14px 60px;
-    }
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .row3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    @media (max-width: 600px){ .row, .row3{ grid-template-columns:1fr; } }
 
-    .hero{
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-      align-items: start;
+    label{ display:block; font-size: 12px; color: var(--muted); margin: 12px 0 6px; }
+    input, select{
+      width:100%; padding: 12px 12px;
+      border:1px solid var(--border); border-radius: 12px;
+      font-size: 14px; outline:none; background:#fff;
     }
+    input:focus, select:focus{ border-color:#c7cbd1; box-shadow: 0 0 0 4px rgba(17,17,17,.06); }
 
-    .card{
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .h1{
-      margin: 0 0 8px;
-      font-size: 28px;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-    .lead{
-      margin: 0 0 14px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .chips{
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .chip{
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,.02);
-      font-size: 13px;
-      color: rgba(0,0,0,.75);
-    }
-
-    .section-title{
-      font-size: 16px;
-      margin: 18px 0 10px;
-      letter-spacing: .01em;
-    }
-
-    /* prices: simplified */
-    .price-row{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .pill{
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,.02);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 13px;
-      color: rgba(0,0,0,.8);
-      white-space: nowrap;
-    }
-    .price-main{
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: -0.01em;
-      margin-right: 8px;
-    }
-    .small-note{
-      font-size: 12px;
-      color: rgba(0,0,0,.58);
-      margin-top: 8px;
-      line-height: 1.35;
-    }
-
-    .steps{
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(0,0,0,.82);
-      line-height: 1.55;
-    }
-    .steps li{ margin: 6px 0; }
-
-    /* form */
-    .form-title{
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
-    .form-sub{
-      margin: 0 0 14px;
-      color: var(--muted);
-      line-height: 1.4;
-      font-size: 14px;
-    }
-    .form-grid{
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 14px 0 14px;
-    }
-    .full{ grid-column: 1 / -1; }
-
-    .input, .select{
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,.14);
-      outline: none;
-      font-size: 14px;
-      background: #fff;
-    }
-    .input:focus, .select:focus{
-      border-color: rgba(0,0,0,.35);
-      box-shadow: 0 0 0 4px rgba(0,0,0,.06);
-    }
-
-    .actions{
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+    .hint{ font-size:12px; color:var(--muted); margin-top: 6px; }
     .btn{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      border: 0;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 14px;
-      background: #111;
-      color: #fff;
-      box-shadow: 0 10px 24px rgba(0,0,0,.12);
-      transition: transform .08s ease, box-shadow .08s ease, opacity .08s ease;
-      user-select: none;
+      display:inline-flex; align-items:center; justify-content:center;
+      width:100%; padding: 12px 14px;
+      border-radius: 12px; border: 0;
+      background: var(--btn); color: var(--btnText);
+      font-weight: 700; font-size: 14px; cursor:pointer;
     }
-    .btn:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.16); }
-    .btn:active{ transform: translateY(0px); opacity: .92; }
-
-    .micro{
-      font-size: 12px;
-      color: rgba(0,0,0,.55);
+    .btn:disabled{ opacity:.5; cursor:not-allowed; }
+    .btn2{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:100%; padding: 12px 14px;
+      border-radius: 12px; border: 1px solid var(--border);
+      background:#fff; color:#111;
+      font-weight: 700; font-size: 14px; cursor:pointer;
       margin-top: 10px;
-      line-height: 1.35;
     }
 
-    /* map teaser */
-    .map-card{
-      position: relative;
-      overflow: hidden;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: #000;
-      min-height: 220px;
-      cursor: pointer;
-    }
-    .map-img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: .92;
-      transform: scale(1.02);
-      pointer-events: none; /* чтобы клики уходили в ссылку */
-    }
-    .map-overlay{
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: flex-end;
-      padding: 14px;
-      background: linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.55));
-      pointer-events: none; /* важно: не перехватывать клики */
-    }
-    .map-badge{
-      background: rgba(255,255,255,.92);
-      color: #111;
-      border-radius: 14px;
-      padding: 10px 12px;
-      max-width: 95%;
-      box-shadow: 0 12px 28px rgba(0,0,0,.20);
-      pointer-events: none; /* важно */
-    }
-    .map-badge b{ display:block; font-size: 14px; }
-    .map-badge span{ display:block; font-size: 12px; color: rgba(0,0,0,.65); margin-top: 3px; }
+    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
+    .pill{ border:1px solid var(--border); padding: 7px 10px; border-radius: 999px; font-size: 12px; color:#111; background:#fff; }
 
-    /* ссылка поверх ВСЕЙ карточки */
-    .map-link{
-      position:absolute;
-      inset:0;
-      z-index: 5;
-      text-decoration:none;
-      color: transparent;
-    }
+    .box{ border:1px dashed var(--border); border-radius: 14px; padding: 12px; margin-top: 12px; background:#fafafa; }
+    .kpi{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .k{ flex: 1 1 160px; border:1px solid var(--border); border-radius: 12px; padding: 12px; background:#fff; }
+    .k .t{ font-size: 12px; color: var(--muted); }
+    .k .v{ font-size: 18px; font-weight: 800; margin-top:4px; }
 
-    @media (max-width: 860px){
-      .hero{ grid-template-columns: 1fr; }
-    }
-    @media (max-width: 560px){
-      .card{ padding: 18px; }
-      .form-grid{ grid-template-columns: 1fr; }
-      .h1{ font-size: 24px; }
-    }
+    .ok{ color:#0f7a32; font-weight:700; }
+    .err{ color:#b42318; font-weight:700; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; white-space: pre-wrap; }
   </style>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="hero">
-      <!-- LEFT -->
+    <div class="grid">
       <div class="card">
-        <h1 class="h1">Нужно оставить вещи?</h1>
-        <p class="lead">
-          Переезд, ремонт, отпуск — можно оставить багаж у нас и забрать позже.
-        </p>
+        <h1>Оставить вещи в ПВЗ</h1>
+        <p>Выберите город и пункт выдачи. Мы посчитаем стоимость и сформируем заказ “ПВЗ → ПВЗ”.</p>
 
-        <div class="chips">
-          <div class="chip">Одинцово</div>
-          <div class="chip">Можайское шоссе 22А</div>
-          <div class="chip">ПВЗ ODN71</div>
-          <div class="chip">до 100 кг</div>
+        <div class="pillbar">
+          <span class="pill">Оплата: наложенный платёж</span>
+          <span class="pill">Надбавка: +5%</span>
+          <span class="pill">Вес: до 100 кг</span>
+          <span class="pill">Габариты: сумма сторон до 300 см</span>
         </div>
 
-        <div class="section-title">Стоимость</div>
-        <div class="price-row">
-          <span class="price-main">от 200 ₽</span>
-        </div>
-        <div class="small-note">
-          Цена — за оформление (по выбранному размеру). Хранение — по условиям тарифа.
-        </div>
+        <label>Город</label>
+        <input id="city" list="cityList" placeholder="Начните вводить: Москва, Одинцово, Казань…" autocomplete="off"/>
+        <datalist id="cityList"></datalist>
+        <div class="hint" id="cityHint">Начните вводить — покажем подсказки из СДЭК.</div>
 
-        <div class="section-title">Размер</div>
-        <div class="price-row" style="margin-top:6px;">
-          <span class="pill">S</span>
-          <span class="pill">M</span>
-          <span class="pill">L</span>
-          <span class="pill">XL</span>
-          <span class="pill">Негабарит (до 300 см.)</span>
-        </div>
+        <label>ПВЗ (куда сдаёте вещи)</label>
+        <input id="pvz" list="pvzList" placeholder="Выберите/введите ПВЗ…" autocomplete="off" disabled/>
+        <datalist id="pvzList"></datalist>
+        <div class="hint" id="pvzHint">Сначала выберите город.</div>
 
-        <div class="section-title">Как это работает</div>
-        <ol class="steps">
-          <li>Заполняете телефон и выбираете размер.</li>
-          <li>Нажимаете кнопку — откроется Telegram с сообщением.</li>
-          <li>Мы отвечаем и подсказываем, как всё оформить на месте.</li>
-        </ol>
-
-        <div class="section-title">Куда приносить</div>
-        <p class="lead" style="margin-bottom: 0;">
-          <b>Одинцово, Можайское шоссе 22А</b><br>
-          ПВЗ: <b>ODN71</b>
-        </p>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="card">
-        <h2 class="form-title">Оставить вещи</h2>
-        <p class="form-sub">Выберите размер и нажмите кнопку — мы быстро ответим.</p>
-
-        <div class="form-grid">
-          <input class="input full" name="phone" placeholder="Телефон для связи" inputmode="tel" />
-          <input class="input" name="days" placeholder="На сколько дней? (необязательно)" inputmode="numeric" />
-          <select class="select" name="size">
-            <option value="">Размер</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="Негабарит до 300 см">Негабарит до 300 см</option>
-          </select>
-        </div>
-
-        <div class="actions">
-          <a class="btn" id="tgLink" href="#" rel="noopener">
-            Написать в Telegram <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-
-        <p class="micro">Можно просто написать “хочу оставить вещи” — мы всё уточним.</p>
-
-        <div class="section-title">Мы на карте</div>
-        <div class="map-card">
-          <a class="map-link" id="mapLink" href="#" target="_blank" rel="noopener">Открыть карту</a>
-          <img class="map-img" id="mapImg" alt="Карта — Одинцово, Можайское шоссе 22А (ODN71)" src="" />
-          <div class="map-overlay">
-            <div class="map-badge">
-              <b>Одинцово, Можайское шоссе 22А</b>
-              <span>ПВЗ ODN71 • нажмите, чтобы открыть карту</span>
-            </div>
+        <div class="row3">
+          <div>
+            <label>Телефон</label>
+            <input id="phone" placeholder="+7 999 123-45-67"/>
+          </div>
+          <div>
+            <label>Срок (дней)</label>
+            <input id="days" type="number" min="1" step="1" placeholder="например, 7"/>
+          </div>
+          <div>
+            <label>Размер</label>
+            <select id="size">
+              <option value="">Выберите…</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="NEO">Негабарит</option>
+            </select>
+            <div class="hint">Можно просто S/M/L/XL/Негабарит — без детализации.</div>
           </div>
         </div>
 
-        <p class="micro" style="margin-top:10px;">
-          Принимаем до <b>100 кг</b>. Если сомневаетесь по размеру — напишите, подскажем.
-        </p>
+        <div class="kpi">
+          <div class="k">
+            <div class="t">Стоимость доставки (по калькулятору)</div>
+            <div class="v" id="kTariff">—</div>
+          </div>
+          <div class="k">
+            <div class="t">Наложенный платёж (+5%)</div>
+            <div class="v" id="kCod">—</div>
+          </div>
+          <div class="k">
+            <div class="t">Статус</div>
+            <div class="v" id="kStatus">—</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="btnCalc" disabled>Посчитать стоимость</button>
+          <button class="btn" id="btnCreate" disabled>Создать заказ</button>
+        </div>
+
+        <button class="btn2" id="btnTg" disabled>Или написать в Telegram</button>
+
+        <div class="box">
+          <div id="resultLine" class="hint">Результат появится здесь.</div>
+          <div id="debug" class="mono"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Как это работает</h2>
+        <p>1) Вы выбираете город и ПВЗ.<br/>2) Мы считаем стоимость “ПВЗ → ПВЗ”.<br/>3) Создаём заказ и отдаём трек/uuid.</p>
+
+        <div class="box">
+          <div class="hint"><b>Примечания</b></div>
+          <p class="hint">• Токены СДЭК хранятся на бэке (Worker), в HTML их нет.<br/>
+            • Тестируем сначала на <span class="mono">api.edu.cdek.ru</span>, потом переключаем на прод.<br/>
+            • Если калькулятор/заказ требуют дополнительные поля — добавим их в payload (это нормально).</p>
+        </div>
+
+        <div class="box">
+          <div class="hint"><b>Куда ведёт QR</b></div>
+          <p class="hint">На эту страницу. Дальше — выбор города и ПВЗ.</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Telegram username БЕЗ @
-    const TG_USERNAME = "theiknow";
+<script>
+  // ====== НАСТРОЙКИ ======
+  const API_BASE = "https://YOUR-WORKER.SUBDOMAIN.workers.dev"; // TODO: вставь URL Worker
+  const TG_USERNAME = "theiknow"; // TODO: ник без @
 
-    // Яндекс.Карты (ссылка не отображается пользователю, только открывается по клику)
-    const YA_MAP_URL = "https://yandex.ru/maps/org/cdek/206506190857/?ll=37.280192%2C55.675397&z=16";
+  // ====== STATE ======
+  let citySelected = null; // { code, city, region, country_code, fias_guid? ... }
+  let pvzSelected  = null; // { code, name, address, location? ... }
+  let lastTariff   = null; // { tariff_code, tariff_name, delivery_sum, ... }
 
-    // Координаты точки
-    const LON = 37.280192;
-    const LAT = 55.675397;
+  const $ = (id) => document.getElementById(id);
 
-    function v(name){
-      const el = document.querySelector(`[name="${name}"]`);
-      return (el && el.value ? el.value.trim() : "");
-    }
+  function setStatus(text, kind="") {
+    $("kStatus").innerHTML = kind ? `<span class="${kind}">${text}</span>` : text;
+  }
 
-    function buildMsg(){
-      const days = v("days");
-      const size = v("size");
-      const phone = v("phone");
+  function money(v){
+    if (v === null || v === undefined || v === "") return "—";
+    const n = Number(v);
+    if (!isFinite(n)) return "—";
+    return n.toLocaleString("ru-RU") + " ₽";
+  }
 
-      const lines = [
-        "Здравствуйте! Хочу оставить вещи.",
-        "Адрес: Одинцово, Можайское шоссе 22А (ПВЗ ODN71)",
-        size ? `Размер: ${size}` : "Размер: (не указал)",
-        days ? `Сколько дней: ${days}` : "Сколько дней: (не важно)",
-        phone ? `Телефон: ${phone}` : "Телефон: (не указал)"
-      ];
+  function buildTelegramMsg() {
+    const phone = $("phone").value.trim();
+    const days  = $("days").value.trim();
+    const size  = $("size").value;
+    const city  = citySelected?.city || $("city").value.trim();
+    const pvz   = pvzSelected?.code ? `${pvzSelected.code} — ${pvzSelected.name || ""}` : $("pvz").value.trim();
+    const tariff = lastTariff?.delivery_sum ? `Тариф: ${lastTariff.delivery_sum} ₽` : "";
+    const cod = lastTariff?.delivery_sum ? `Наложка(+5%): ${(Math.ceil(lastTariff.delivery_sum * 1.05)).toFixed(0)} ₽` : "";
 
-      return encodeURIComponent(lines.join("\n"));
-    }
+    const msg =
+`Здравствуйте! Хочу оставить вещи на хранение.
+Город: ${city}
+ПВЗ: ${pvz}
+Срок: ${days || "—"} дней
+Размер: ${size || "—"}
+Телефон: ${phone || "—"}
+${tariff}
+${cod}`;
+    return encodeURIComponent(msg);
+  }
 
-    document.getElementById("tgLink").addEventListener("click", (e) => {
-      e.preventDefault();
-      const url = `https://t.me/${TG_USERNAME}?text=${buildMsg()}`;
-      window.location.href = url;
+  function refreshButtons() {
+    const okCity = !!citySelected;
+    const okPvz  = !!pvzSelected;
+    $("pvz").disabled = !okCity;
+
+    $("btnCalc").disabled = !(okCity && okPvz);
+    $("btnCreate").disabled = !(okCity && okPvz);
+    $("btnTg").disabled = !(okCity && okPvz);
+  }
+
+  async function api(path, opts={}) {
+    const r = await fetch(API_BASE + path, {
+      ...opts,
+      headers: { "Content-Type": "application/json", ...(opts.headers || {}) }
     });
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { raw: text }; }
+    if (!r.ok) throw new Error(`${r.status}: ${JSON.stringify(data).slice(0,400)}`);
+    return data;
+  }
 
-    // карта
-    const mapLink = document.getElementById("mapLink");
-    mapLink.href = YA_MAP_URL;
+  // ====== CITY SUGGEST ======
+  let cityTimer = null;
+  $("city").addEventListener("input", () => {
+    const q = $("city").value.trim();
+    citySelected = null;
+    pvzSelected = null;
+    lastTariff = null;
+    $("pvz").value = "";
+    $("pvzList").innerHTML = "";
+    $("kTariff").textContent = "—";
+    $("kCod").textContent = "—";
+    setStatus("—");
+    refreshButtons();
 
-    const mapImg = document.getElementById("mapImg");
-    const staticUrl =
-      "https://static-maps.yandex.ru/1.x/?" +
-      `ll=${LON},${LAT}` +
-      "&z=16" +
-      "&size=650,360" +
-      "&l=map" +
-      `&pt=${LON},${LAT},pm2rdm`;
+    clearTimeout(cityTimer);
+    if (q.length < 2) {
+      $("cityList").innerHTML = "";
+      $("cityHint").textContent = "Начните вводить — покажем подсказки из СДЭК.";
+      return;
+    }
+    cityTimer = setTimeout(() => loadCitySuggest(q), 250);
+  });
 
-    mapImg.src = staticUrl;
-  </script>
+  $("city").addEventListener("change", () => {
+    // пользователь мог выбрать из datalist; попробуем сопоставить по data-атрибуту
+    const opt = Array.from($("cityList").children).find(o => o.value === $("city").value.trim());
+    if (opt && opt.dataset.payload) {
+      citySelected = JSON.parse(opt.dataset.payload);
+      $("cityHint").innerHTML = `<span class="ok">Выбран город:</span> ${citySelected.city}`;
+      loadPVZ(citySelected);
+    } else {
+      $("cityHint").textContent = "Выберите город из подсказок — так надёжнее.";
+    }
+    refreshButtons();
+  });
+
+  async function loadCitySuggest(q) {
+    try{
+      $("cityHint").textContent = "Ищем города…";
+      const data = await api(`/suggest/cities?q=${encodeURIComponent(q)}`, { method:"GET", headers:{} });
+      const list = data?.items || [];
+      $("cityList").innerHTML = list.map(x => {
+        const label = [x.city, x.region, x.country_code].filter(Boolean).join(", ");
+        return `<option value="${escapeHtml(label)}" data-payload='${escapeAttr(JSON.stringify(x))}'></option>`;
+      }).join("");
+      $("cityHint").textContent = list.length ? "Выберите город из подсказок." : "Ничего не найдено.";
+    }catch(e){
+      $("cityHint").innerHTML = `<span class="err">Ошибка поиска городов:</span> ${escapeHtml(String(e.message||e))}`;
+    }
+  }
+
+  // ====== PVZ LIST ======
+  $("pvz").addEventListener("change", () => {
+    const opt = Array.from($("pvzList").children).find(o => o.value.startsWith($("pvz").value.trim()));
+    if (opt && opt.dataset.payload) {
+      pvzSelected = JSON.parse(opt.dataset.payload);
+      $("pvzHint").innerHTML = `<span class="ok">Выбран ПВЗ:</span> ${pvzSelected.code}`;
+    } else {
+      $("pvzHint").textContent = "Выберите ПВЗ из списка (код/адрес).";
+      pvzSelected = null;
+    }
+    refreshButtons();
+  });
+
+  async function loadPVZ(cityObj) {
+    try{
+      $("pvzHint").textContent = "Грузим список ПВЗ…";
+      $("pvz").disabled = true;
+      $("pvzList").innerHTML = "";
+
+      // Берём офисы по городу через Worker
+      // city_code / fias_guid зависит от того, что возвращает suggest; Worker это нормализует
+      const data = await api(`/deliverypoints?city_code=${encodeURIComponent(cityObj.code||"")}&city=${encodeURIComponent(cityObj.city||"")}`, { method:"GET", headers:{} });
+      const items = data?.items || [];
+      $("pvzList").innerHTML = items.map(p => {
+        const label = `${p.code} — ${p.name || ""} (${p.address || ""})`;
+        return `<option value="${escapeHtml(p.code)} — ${escapeHtml(p.address||p.name||"")}" data-payload='${escapeAttr(JSON.stringify(p))}'></option>`;
+      }).join("");
+
+      $("pvzHint").textContent = items.length ? "Выберите ПВЗ (код / адрес)." : "ПВЗ не найдены по этому городу.";
+      $("pvz").disabled = false;
+    }catch(e){
+      $("pvzHint").innerHTML = `<span class="err">Ошибка списка ПВЗ:</span> ${escapeHtml(String(e.message||e))}`;
+      $("pvz").disabled = false;
+    }
+  }
+
+  // ====== CALCULATOR ======
+  $("btnCalc").addEventListener("click", async () => {
+    $("debug").textContent = "";
+    setStatus("Считаем…");
+    try{
+      // Параметры пакета/веса упрощённо — под твою бизнес-логику можешь менять
+      // TODO: если нужно, привяжем размер к габаритам/весу более точно
+      const pkg = packageBySize($("size").value);
+
+      const payload = {
+        city: citySelected,
+        pvz: pvzSelected,
+        package: pkg,
+        // “ПВЗ → тот же ПВЗ”
+        from: { type: "pvz", code: pvzSelected.code },
+        to:   { type: "pvz", code: pvzSelected.code }
+      };
+
+      const data = await api("/calculator", { method:"POST", body: JSON.stringify(payload) });
+      lastTariff = data?.tariff || null;
+
+      $("kTariff").textContent = money(lastTariff?.delivery_sum);
+      const cod = lastTariff?.delivery_sum ? Math.ceil(Number(lastTariff.delivery_sum) * 1.05) : null;
+      $("kCod").textContent = money(cod);
+
+      setStatus("Готово", "ok");
+      $("resultLine").innerHTML = `<span class="ok">Стоимость посчитана.</span> Можно создавать заказ.`;
+      $("debug").textContent = JSON.stringify(data, null, 2);
+    }catch(e){
+      setStatus("Ошибка", "err");
+      $("resultLine").innerHTML = `<span class="err">Ошибка калькулятора:</span> ${escapeHtml(String(e.message||e))}`;
+      $("debug").textContent = String(e.stack||e);
+    }
+  });
+
+  // ====== CREATE ORDER ======
+  $("btnCreate").addEventListener("click", async () => {
+    $("debug").textContent = "";
+    setStatus("Создаём заказ…");
+    try{
+      const phone = $("phone").value.trim();
+      if (!phone) throw new Error("Введите телефон.");
+
+      if (!lastTariff?.delivery_sum) {
+        // на всякий случай посчитаем
+        await $("btnCalc").click();
+      }
+
+      const pkg = packageBySize($("size").value);
+      const days = Number($("days").value || 0);
+
+      const tariffSum = Number(lastTariff?.delivery_sum || 0);
+      const codSum = Math.ceil(tariffSum * 1.05);
+
+      const payload = {
+        city: citySelected,
+        pvz: pvzSelected,
+        package: pkg,
+        days,
+        phone,
+        tariff: lastTariff,
+        cod_sum: codSum
+      };
+
+      const data = await api("/orders", { method:"POST", body: JSON.stringify(payload) });
+
+      setStatus("Создано", "ok");
+      $("resultLine").innerHTML =
+        `<span class="ok">Заказ создан.</span> UUID: <b>${escapeHtml(data.uuid||"—")}</b> ` +
+        (data.track ? `• Трек: <b>${escapeHtml(data.track)}</b>` : "");
+
+      $("debug").textContent = JSON.stringify(data, null, 2);
+    }catch(e){
+      setStatus("Ошибка", "err");
+      $("resultLine").innerHTML = `<span class="err">Ошибка создания:</span> ${escapeHtml(String(e.message||e))}`;
+      $("debug").textContent = String(e.stack||e);
+    }
+  });
+
+  // ====== TELEGRAM FALLBACK ======
+  $("btnTg").addEventListener("click", () => {
+    const url = `https://t.me/${TG_USERNAME}?text=${buildTelegramMsg()}`;
+    window.open(url, "_blank", "noopener");
+  });
+
+  // ====== UTILS ======
+  function packageBySize(size){
+    // TODO:
+    const base = { weight: 1.0, length: 30, width: 20, height: 15 };
+    if (size === "S") return { weight: 2.0, length: 35, width: 25, height: 20 };
+    if (size === "M") return { weight: 10.0, length: 60, width: 40, height: 35 };
+    if (size === "L") return { weight: 20.0, length: 80, width: 50, height: 45 };
+    if (size === "XL") return { weight: 30.0, length: 100, width: 60, height: 60 };
+    if (size === "NEO") return { weight: 50.0, length: 120, width: 80, height: 80 };
+    return base;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function escapeAttr(s){ return escapeHtml(s).replace(/'/g, "&#39;"); }
+
+  refreshButtons();
+</script>
 </body>
 </html>
